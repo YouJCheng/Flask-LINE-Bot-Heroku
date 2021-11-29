@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "flask-line-bot-heroku"
+name = "flask-line-bot-tmt-test"
 version = "0.1.0"
 description = ""
 authors = ["hsuanchi <a0025071@gmail.com>"]
