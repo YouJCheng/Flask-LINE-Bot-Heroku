@@ -46,6 +46,6 @@ def handle_image(event):
     message_id = event.message.id
     
   # Send To Line
-    reply = TextSendMessage(text=f"{get_message}")
+    reply = TextSendMessage(text=f"{message_id}")
     line_bot_api.reply_message(event.reply_token, reply)
 
