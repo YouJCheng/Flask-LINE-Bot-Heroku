@@ -31,6 +31,19 @@ def callback():
 
         return "OK"
 
+flex_message = FlexSendMessage(
+    alt_text='hello',
+    contents=BubbleContainer(
+        direction='ltr',
+        hero=ImageComponent(
+            url='https://example.com/cafe.jpg',
+            size='full',
+            aspect_ratio='20:13',
+            aspect_mode='cover',
+            action=URIAction(uri='http://example.com', label='label')
+        )
+    )
+)
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -42,23 +55,14 @@ def handle_message(event):
         )
         line_bot_api.reply_message(event.reply_token, sticker_message)
     elif get_message == 'flex':
-        flex_message = FlexSendMessage(
-            alt_text='hello',
-            contents=FlexSendMessage.BubbleContainer(
-                    direction='ltr',
-                    hero=FlexSendMessage.ImageComponent(
-                    url='https://example.com/cafe.jpg',
-                    size='full',
-                    aspect_ratio='20:13',
-                    aspect_mode='cover',
-                    action=actions.URIAction(uri='http://google.com', label='label')
-                    )
-                )
-            )
         line_bot_api.reply_message(event.reply_token, flex_message)
     else:
-        reply = TextSendMessage(text=f"{get_message}")   
-        line_bot_api.reply_message(event.reply_token, reply)
+        reply = TextSendMessage(text=f"{get_message}") 
+        text_message = TextSendMessage(text=f"{get_message}",
+                               quick_reply=QuickReply(items=[
+                                   QuickReplyButton(action=MessageAction(label="label", text="text"))
+                               ]))  
+        line_bot_api.reply_message(event.reply_token, text_message)
 
 
 @handler.add(MessageEvent, message=ImageMessage)
