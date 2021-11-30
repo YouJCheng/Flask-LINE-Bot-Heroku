@@ -36,15 +36,67 @@ flex_message = FlexSendMessage(
     contents=BubbleContainer(
         direction='ltr',
         hero=ImageComponent(
-            url='https://example.com/cafe.jpg',
+            url='https://zh.wikipedia.org/wiki/Google_Chrome#/media/File:Google_Chrome_icon_(September_2014).svg',
             size='full',
             aspect_ratio='20:13',
             aspect_mode='cover',
-            action=URIAction(uri='http://example.com', label='label')
+            action=URIAction(uri='http://google.com', label='Google')
         )
     )
 )
-
+carousel_template_message = TemplateSendMessage(
+    alt_text='Carousel template',
+    template=CarouselTemplate(
+        columns=[
+            CarouselColumn(
+                thumbnail_image_url='https://example.com/item1.jpg',
+                title='this is menu1',
+                text='description1',
+                actions=[
+                    PostbackAction(
+                        label='postback1',
+                        display_text='postback text1',
+                        data='action=buy&itemid=1'
+                    ),
+                    MessageAction(
+                        label='message1',
+                        text='message text1'
+                    ),
+                    URIAction(
+                        label='uri1',
+                        uri='http://example.com/1'
+                    )
+                ]
+            ),
+            CarouselColumn(
+                thumbnail_image_url='https://example.com/item2.jpg',
+                title='this is menu2',
+                text='description2',
+                actions=[
+                    PostbackAction(
+                        label='postback2',
+                        display_text='postback text2',
+                        data='action=buy&itemid=2'
+                    ),
+                    MessageAction(
+                        label='message2',
+                        text='message text2'
+                    ),
+                    URIAction(
+                        label='uri2',
+                        uri='http://example.com/2'
+                    )
+                ]
+            )
+        ]
+    )
+)
+location_message = LocationSendMessage(
+    title='Tokyo',
+    address='Tokyo',
+    latitude=35.65910807942215,
+    longitude=139.70372892916203
+)
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     get_message = event.message.text
@@ -56,12 +108,20 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, sticker_message)
     elif get_message == 'flex':
         line_bot_api.reply_message(event.reply_token, flex_message)
-    else:
-        reply = TextSendMessage(text=f"{get_message}") 
+    elif get_message == 'carousel':
+        line_bot_api.reply_message(event.reply_token, carousel_template_message)
+    elif get_message == 'quick':
         text_message = TextSendMessage(text=f"{get_message}",
                                quick_reply=QuickReply(items=[
-                                   QuickReplyButton(action=MessageAction(label="label", text="text"))
+                                   QuickReplyButton(action=MessageAction(label="A", text="快速回復A")),
+                                    QuickReplyButton(action=MessageAction(label="B", text="快速回復B")),
+                                   QuickReplyButton(action=MessageAction(label="C", text="快速回復C")),
                                ]))  
+        #line_bot_api.reply_message(event.reply_token, text_message)
+    elif get_message == 'location':
+        line_bot_api.reply_message(event.reply_token, location_message)
+    else:
+        reply = TextSendMessage(text=f"{get_message}") 
         line_bot_api.reply_message(event.reply_token, text_message)
 
 
