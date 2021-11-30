@@ -117,7 +117,7 @@ def handle_message(event):
                                     QuickReplyButton(action=MessageAction(label="B", text="快速回復B")),
                                    QuickReplyButton(action=MessageAction(label="C", text="快速回復C")),
                                ]))  
-        #line_bot_api.reply_message(event.reply_token, text_message)
+        line_bot_api.reply_message(event.reply_token, text_message)
     elif get_message == 'location':
         line_bot_api.reply_message(event.reply_token, location_message)
     else:
