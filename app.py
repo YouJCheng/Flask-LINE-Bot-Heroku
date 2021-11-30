@@ -35,17 +35,11 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     get_message = event.message.text
-    if get_message.match('貼圖',get_message):
-        # 貼圖查詢：https://developers.line.biz/en/docs/messaging-api/sticker-list/#specify-sticker-in-message-object
-        sticker_message = StickerSendMessage(
+    sticker_message = StickerSendMessage(
             package_id='1',
             sticker_id='1'
-        )
-        line_bot_api.reply_message(event.reply_token, sticker_message)
-    else:
-        reply = TextSendMessage(text=f"{get_message}")
-         # Send To Line
-        line_bot_api.reply_message(event.reply_token, reply)
+    )
+    line_bot_api.reply_message(event.reply_token, sticker_message)
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
