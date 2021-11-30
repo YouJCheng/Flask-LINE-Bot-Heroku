@@ -122,7 +122,7 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, location_message)
     else:
         reply = TextSendMessage(text=f"{get_message}") 
-        line_bot_api.reply_message(event.reply_token, text_message)
+        line_bot_api.reply_message(event.reply_token, reply)
 
 
 @handler.add(MessageEvent, message=ImageMessage)
