@@ -41,7 +41,7 @@ def handle_message(event):
                 sticker_id='1'
         )
         line_bot_api.reply_message(event.reply_token, sticker_message)
-    else get_message == 'flex':
+    elif get_message == 'flex':
         flex_message = FlexSendMessage(
             alt_text='hello',
             contents=FlexSendMessage.BubbleContainer(
