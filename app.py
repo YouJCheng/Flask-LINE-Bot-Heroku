@@ -35,11 +35,31 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     get_message = event.message.text
-    sticker_message = StickerSendMessage(
-            package_id='1',
-            sticker_id='1'
-    )
-    line_bot_api.reply_message(event.reply_token, sticker_message)
+    if get_message == 'sticker':
+        sticker_message = StickerSendMessage(
+                package_id='1',
+                sticker_id='1'
+        )
+        line_bot_api.reply_message(event.reply_token, sticker_message)
+    else get_message == 'flex':
+        flex_message = FlexSendMessage(
+            alt_text='hello',
+            contents=FlexSendMessage.BubbleContainer(
+                    direction='ltr',
+                    hero=FlexSendMessage.ImageComponent(
+                    url='https://example.com/cafe.jpg',
+                    size='full',
+                    aspect_ratio='20:13',
+                    aspect_mode='cover',
+                    action=actions.URIAction(uri='http://google.com', label='label')
+                    )
+                )
+            )
+        line_bot_api.reply_message(event.reply_token, flex_message)
+    else:
+        reply = TextSendMessage(text=f"{get_message}")   
+        line_bot_api.reply_message(event.reply_token, reply)
+
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
