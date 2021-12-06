@@ -142,14 +142,17 @@ def handle_image(event):
     lat2 = test_point[0]['lat']
     lon2 = test_point[0]['lng']
     a = haversine(lon1, lat1, lon2, lat2)
+    radius = 1.00
     if a <= radius:
       print('Inside the area')
       reply = TextSendMessage(text='打卡成功')
+      line_bot_api.reply_message(event.reply_token, reply)
     else:
       print('Outside the area')
       reply = TextSendMessage(text='打卡失敗, 距離公司超過一公里')
+      line_bot_api.reply_message(event.reply_token, reply)
+
     # Send To Line
-    line_bot_api.reply_message(event.reply_token, reply)
 
 
 def haversine(lon1, lat1, lon2, lat2):
