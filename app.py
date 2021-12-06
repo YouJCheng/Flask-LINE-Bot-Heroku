@@ -8,6 +8,7 @@ from flask import Flask, abort, request
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
+from math import radians, cos, sin, asin, sqrt
 
 app = Flask(__name__)
 
@@ -110,12 +111,10 @@ def handle_message(event):
         line_bot_api.reply_message(event.reply_token, flex_message)
     elif get_message == 'carousel':
         line_bot_api.reply_message(event.reply_token, carousel_template_message)
-    elif get_message == 'quick':
-        text_message = TextSendMessage(text=f"{get_message}",
+    elif get_message == '打卡':
+        text_message = TextSendMessage(text='請提供位置訊息',
                                quick_reply=QuickReply(items=[
-                                   QuickReplyButton(action=MessageAction(label="A", text="快速回復A")),
-                                    QuickReplyButton(action=MessageAction(label="B", text="快速回復B")),
-                                   QuickReplyButton(action=MessageAction(label="C", text="快速回復C")),
+                                    QuickReplyButton(action=LocationAction(label="位置資訊")),
                                ]))  
         line_bot_api.reply_message(event.reply_token, text_message)
     elif get_message == 'location':
@@ -132,3 +131,45 @@ def handle_image(event):
     reply = TextSendMessage(text=f"{message_id}")
     line_bot_api.reply_message(event.reply_token, reply)
 
+
+@handler.add(MessageEvent, message=LocationMessage)
+def handle_image(event):
+    message_id = event.message.id
+    # Send To Line
+    reply = TextSendMessage(text='這是一個位置訊息')
+    line_bot_api.reply_message(event.reply_token, reply)
+
+
+def haversine(lon1, lat1, lon2, lat2):
+    """
+    Calculate the great circle distance between two points 
+    on the earth (specified in decimal degrees)
+    """
+    # convert decimal degrees to radians 
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+    # haversine formula 
+    dlon = lon2 - lon1 
+    dlat = lat2 - lat1 
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a)) 
+    r = 6371 # Radius of earth in kilometers. Use 3956 for miles
+    return c * r
+
+# center_point = [{'lat': -7.7940023, 'lng': 110.3656535}]
+# test_point = [{'lat': -7.79457, 'lng': 110.36563}]
+
+# lat1 = center_point[0]['lat']
+# lon1 = center_point[0]['lng']
+# lat2 = test_point[0]['lat']
+# lon2 = test_point[0]['lng']
+
+# radius = 1.00 # in kilometer
+
+# a = haversine(lon1, lat1, lon2, lat2)
+
+# print('Distance (km) : ', a)
+# if a <= radius:
+#     print('Inside the area')
+# else:
+#     print('Outside the area')
