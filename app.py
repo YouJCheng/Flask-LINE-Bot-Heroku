@@ -135,8 +135,20 @@ def handle_image(event):
 @handler.add(MessageEvent, message=LocationMessage)
 def handle_image(event):
     message_id = event.message.id
+    center_point = [{'lat': 24.98324445853197, 'lng': 121.53656441827647}]
+    test_point = [{'lat': event.message.latitude , 'lng': event.message.longitude}]
+    lat1 = center_point[0]['lat']
+    lon1 = center_point[0]['lng']
+    lat2 = test_point[0]['lat']
+    lon2 = test_point[0]['lng']
+    a = haversine(lon1, lat1, lon2, lat2)
+    if a <= radius:
+      print('Inside the area')
+      reply = TextSendMessage(text='打卡成功')
+    else:
+      print('Outside the area')
+      reply = TextSendMessage(text='打卡失敗, 距離公司超過一公里')
     # Send To Line
-    reply = TextSendMessage(text='這是一個位置訊息')
     line_bot_api.reply_message(event.reply_token, reply)
 
 
@@ -147,7 +159,6 @@ def haversine(lon1, lat1, lon2, lat2):
     """
     # convert decimal degrees to radians 
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
-
     # haversine formula 
     dlon = lon2 - lon1 
     dlat = lat2 - lat1 
